@@ -22,3 +22,57 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.titles{
+     color:darkblue;
+     font-style:italic;
+     margin-bottom:20px;
+}
+
+.input-group{
+     margin-bottom:10px;
+}
+
+.input-group label{
+     margin-right:10px;
+     width:130px;
+     text-align:right;
+}
+
+input[type=range]{
+     position:relative;
+     top:5px;
+}
+
+.selectlimit{
+     color:gray;
+     margin-bottom:10px;
+}
+
+.selectmin{
+margin-right:5px;
+}
+
+.selectmax {
+     margin-left: 5px;
+}
+
+.selectedvalue{
+     display:inline-block;
+     border:1px solid gray;
+     width:100px;
+     height:20px;
+     margin-left:10px;
+     text-align:right;
+}
+
+.results{
+     border:1px solid darkblue;
+     margin-top:20px;
+     padding:10px;
+}
+
+footer {
+     text-align: center;
+     color: darkblue;
+}

@@ -1,31 +1,162 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IndexViewModel
+@{
+     ViewBag.Title = "Flight Scheduler";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div>
+     <h2 class="titles">Flight Scheduler</h2>
+     <div class="selectors">
+          @using (Html.BeginForm())
+          {
+               <div class="input-group">
+                    <label>Location:</label>
+                    <select name="LocationCriterion" data-bind="value:selLoc">
+                         @foreach (SelectListItem item in Model.LocationOptions)
+                         {
+                              <option value="@item.Value">@item.Text</option>
+                         }
+                    </select>
+               </div>
+               <div class="input-group">
+                    <label>Minimum Capacity:</label>
+                    <span class="selectlimit selectmin">@Html.DisplayFor(m => m.MinCapacityOption)</span>
+                    <input type="range" min="@Model.MinCapacityOption" max="@Model.MaxCapacityOption" name="MinCapacityCriterion" id="MinCapacityCriterion" value="@Model.MinCapacityCriterion" data-bind="value:selCap" />
+                    <span class="selectlimit selectmax">@Html.DisplayFor(m => m.MaxCapacityOption)</span>
+                    <span class="selectedvalue" id="selectedCapacity" data-bind="text:selCap"></span>
+
+               </div>
+               <div class="input-group">
+                    <label>Maximum Cost:</label>
+                    <span class="selectlimit selectmin">@Html.DisplayFor(m => m.MinCostOption)</span>
+                    <input type="range" min="@Model.MinCostOption" max="@Model.MaxCostOption" name="MaxCostCriterion" id="MaxCostCriterion" value="@Model.MaxCostCriterion" data-bind="value:selCst" />
+                    <span class="selectlimit selectmax">@Html.DisplayFor(m => m.MaxCostOption)</span>
+                    <span class="selectedvalue" id="selectedCost" data-bind="text:selCstDisp"></span>
+               </div>
+               <div class="input-group">
+                    <label>Minimum Range:</label>
+                    <span class="selectlimit selectmin">@Html.DisplayFor(m => m.MinRangeOption)</span>
+                    <input type="range" min="@Model.MinRangeOption" max="@Model.MaxRangeOption" name="MinRangeCriterion" id="MinRangeCriterion" value="@Model.MinRangeCriterion" data-bind="value:selRng" />
+                    <span class="selectlimit selectmax">@Html.DisplayFor(m => m.MaxRangeOption)</span>
+                    <span class="selectedvalue" id="selectedRange" data-bind="text:selRngDisp"></span>
+               </div>
+               <input type="submit" value="Search" />
+          }
+     </div>
+     <div class="results">
+          <h4>Available Aircraft</h4>
+          @if (Model.Planes == null)
+          {
+               <p>No selection made.</p>
+          }
+          else if (Model.Planes.Count() == 0)
+          {
+               <h5>Sorry, no aircraft match those criteria.</h5>
+          }
+          else
+          {
+               <table class="table table-striped">
+                    <thead>
+                         <tr>
+                              <th>Id</th>
+                              <th>Capacity</th>
+                              <th>Cost</th>
+                              <th>Location</th>
+                              <th>Range</th>
+                              <th>Type</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                         @for (int i = 0; i < Model.Planes.Count(); i++)
+                         {
+                              <tr>
+                                   <td>@Model.Planes[i].Id</td>
+                                   <td>@Model.Planes[i].Capacity</td>
+                                   <td>@Html.DisplayFor(m => m.Planes[i].Cost)</td>
+                                   <td>@Model.LocationOptions.SingleOrDefault(x => Int32.Parse(x.Value) == Model.Planes[i].Location).Text</td>
+                                   <td>@Model.Planes[i].Range</td>
+                                   <td>@Model.Planes[i].Type</td>
+                              </tr>
+                         }
+                    </tbody>
+                    @*<tbody data-bind="foreach:planes">
+                         <tr>
+                              <td data-bind="text: id"></td>
+                              <td data-bind="text: capacity"></td>
+                              <td data-bind="text: cost"></td>
+                              <td data-bind="text: location"></td>
+                              <td data-bind="text: range"></td>
+                              <td data-bind="text: type"></td>
+                         </tr>
+                    </tbody>*@
+               </table>
+          }
+     </div>
+     <div class="results">
+          <h4>Available Crew</h4>
+          @if (Model.Crew == null)
+          {
+               <p>No selection made.</p>
+          }
+          else if (Model.Crew.Count() == 0)
+          {
+               <h5>Sorry, no crew available.</h5>
+          }
+          else
+          {
+               <table class="table table-striped">
+                    <thead>
+                         <tr>
+                              <th>Id</th>
+                              <th>Name</th>
+                              <th>Location</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                         @foreach (Pilot p in Model.Crew)
+                         {
+                              <tr>
+                                   <td>@p.Id</td>
+                                   <td>@p.FirstName @p.LastName</td>
+                                   <td>@Model.LocationOptions.SingleOrDefault(x => Int32.Parse(x.Value) == p.Location).Text</td>
+                              </tr>
+                         }
+                    </tbody>
+               </table>
+          }
+     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<script>
+     function Aircraft(id, capacity, cost, location, range, type) {
+          var self = this;
+          self.id = id;
+          self.capacity = capacity;
+          self.cost = cost;
+          self.location = location;
+          self.range = range;
+          self.type = type;
+     }
+
+     function Pilot(id, firstname, lastname, location) {
+          var self = this;
+          self.id = id;
+          self.firstname = firstname;
+          self.lastname = lastname;
+          self.location = location;
+     }
+
+     function IndexVM() {
+          var self = this;
+          self.selLoc = ko.observable(@Model.LocationCriterion);
+          self.selCap = ko.observable(@Model.MinCapacityCriterion);
+          self.selCst = ko.observable(@Model.MaxCostOption);
+          self.selCstDisp = ko.computed(function () {
+               return '$' + self.selCst();
+          });
+          self.selRng = ko.observable(@Model.MinRangeCriterion);
+          self.selRngDisp = ko.computed(function () {
+               return self.selRng() + 'nm';
+          });
+     }
+     ko.applyBindings(new IndexVM());
+</script>

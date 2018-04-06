@@ -3,51 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using linkucopia;
 using linkucopia.Controllers;
+using NUnit.Framework;
 
 namespace linkucopia.Tests.Controllers
 {
-     [TestClass]
+     [TestFixture]
      public class HomeControllerTest
      {
-          [TestMethod]
-          public void Index()
+          [Test]
+          public void IndexReturnsInitialView()
           {
-               // Arrange
                HomeController controller = new HomeController();
-
-               // Act
                ViewResult result = controller.Index() as ViewResult;
-
-               // Assert
                Assert.IsNotNull(result);
+               Assert.IsInstanceOf<IndexViewModel>(result.Model);
           }
 
-          [TestMethod]
-          public void About()
+          [Test]
+          public void IndexReturnsFilteredDataOnPost()
           {
-               // Arrange
                HomeController controller = new HomeController();
+               IndexViewModel model = new IndexViewModel();
+               model.MinCapacityCriterion = 200;
+               model.MaxCostCriterion = 35000;
+               model.MinRangeCriterion = 1100;
+               model.LocationCriterion = 1;
+               ViewResult result = controller.Index(model) as ViewResult;
+               Assert.IsNotNull(result);
+               Assert.IsNotNull(model.Planes);
+               Assert.IsNotNull(model.Crew);
+          }
 
-               // Act
+          [Test]
+          public void AboutReturnsView()
+          {
+               HomeController controller = new HomeController();
                ViewResult result = controller.About() as ViewResult;
-
-               // Assert
-               Assert.AreEqual("Your application description page.", result.ViewBag.Message);
-          }
-
-          [TestMethod]
-          public void Contact()
-          {
-               // Arrange
-               HomeController controller = new HomeController();
-
-               // Act
-               ViewResult result = controller.Contact() as ViewResult;
-
-               // Assert
                Assert.IsNotNull(result);
           }
      }
